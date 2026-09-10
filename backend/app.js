@@ -24,12 +24,27 @@ server.get('/produtos', (req, res) => {
     });
 });
 
+// GET - Listar produtos ordenados
+server.get('/produtos/ordenados', (req, res) => {
+
+    const sql = 'SELECT * FROM produtos ORDER BY nome';
+
+    connection.query(sql, (erro, resultados) => {
+
+        if (erro) {
+            return res.status(500).json({
+                erro: erro.message
+            });
+        }
+
+        res.json(resultados);
+    });
+});
 
 // GET - Buscar produto por ID
 server.get('/produtos/:id', (req, res) => {
 
     const id = req.params.id;
-
     const sql = 'SELECT * FROM produtos WHERE id_produto = ?';
 
     connection.query(sql, [id], (erro, resultados) => {
@@ -47,6 +62,30 @@ server.get('/produtos/:id', (req, res) => {
         }
 
         res.json(resultados[0]);
+    });
+});
+
+// GET - Buscar produto por nome
+server.get('/produtos/nome/:nome', (req, res) => {
+
+    const nome = req.params.nome;
+    const sql = 'SELECT * FROM produtos WHERE nome LIKE ?';
+
+    connection.query(sql, [`%${nome}%`], (erro, resultados) => {
+
+        if (erro) {
+            return res.status(500).json({
+                erro: erro.message
+            });
+        }
+
+        if (resultados.length === 0) {
+            return res.status(404).json({
+                mensagem: 'Produto não encontrado'
+            });
+        }
+
+        res.json(resultados);
     });
 });
 
