@@ -208,30 +208,6 @@ server.put('/produtos/:id', (req, res) => {
 });
 
 
-// DELETE - Excluir produto
-server.delete('/produtos/:id', (req, res) => {
-
-    const id = req.params.id;
-    const sql = 'DELETE FROM produtos WHERE id_produto = ?';
-
-    connection.query(sql, [id], (erro, resultado) => {
-
-        if (erro) {
-            return res.status(500).json({
-                erro: erro.message
-            });
-        }
-        if (resultado.affectedRows === 0) {
-            return res.status(404).json({
-                mensagem: 'Produto não encontrado'
-            });
-        }
-        res.json({
-            mensagem: 'Produto excluído com sucesso'
-        });
-    });
-});
-
 const PORT = 8082;
 
 server.listen(PORT, () => {
